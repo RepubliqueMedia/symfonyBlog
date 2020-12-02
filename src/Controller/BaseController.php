@@ -8,6 +8,8 @@
 namespace App\Controller;
 
 
+use App\Entity\Category;
+use App\Form\CategoryType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
@@ -64,7 +66,7 @@ class BaseController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="article", requirements={"id"="\d+"})
+     * @Route("/article/{id}", name="article", requirements={"id"="\d+"})
      */
     public function article(int $id, ArticleRepository $repo): Response
     {
@@ -91,10 +93,10 @@ class BaseController extends AbstractController
     }
 
     /**
-     * @Route("/new",name="newArticle")
-     * @Route("/edit/{id}",name="editArticle", requirements={"id"="\d+"})
+     * @Route("/article/new",name="new_article")
+     * @Route("/article/{id}/edit",name="edit_article", requirements={"id"="\d+"})
      */
-    function newArticle(Request $request, Article $article=null): Response
+    function manage_article(Request $request, Article $article=null): Response
     {
         /*
          WTF : tu as une route avec un id, cherche moi l'article correspondant auto
@@ -143,12 +145,58 @@ class BaseController extends AbstractController
             return $this->redirectToRoute('article', ['id' => $article->getId()]);
         }
 
-        return $this->render('base/formArticle.html.twig', [
+        return $this->render('base/form_article.html.twig', [
             'site_name' => 'Nom du Site',// voir pour le config + tard
             'article' => $article,
             'formArticle' => $form->createView(),
             'editMode'=>($article->getId() ? true : false),//null = new
         ]);
 
+    }
+
+    /**
+     * @Route("/category/new",name="new_category")
+     * @Route("/category/{id}/edit",name="edit_category", requirements={"id"="\d+"})
+     */
+    function manage_category(Request $request, Category $category=null): Response{
+        if(!$category){
+            $category=new Category();
+        }
+        $form = $this->createForm(CategoryType::class, $category);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            //on récup le manager d'entity
+            $manager = $this->getDoctrine()->getManager();
+            $manager->persist($category);
+            $manager->flush();
+            return $this->redirectToRoute('article', ['id' => $category->getId()]);
+        }
+        return $this->render('base/form_category.html.twig', [
+            'site_name' => 'Nom du Site',// voir pour le config + tard
+            'category' => $category,
+            'formCategory' => $form->createView(),
+            'editMode'=>($category->getId() ? true : false),//null = new
+        ]);
+    }
+
+    /**
+     * @Route("/category/{id}", name="view_category", requirements={"id"="\d+"})
+     */
+    function view_category(int $id,Category $category): Response {
+        /*
+        $articles = $repo->findBy(['categories'=>$id]);
+        dd($articles);
+        ArticleRepository $repo
+        */
+        //tout simplement
+        $articles=$category->getArticles();
+
+        return $this->render('base/home.html.twig', [
+            'site_name' => 'Nom du Site',// voir pour le config + tard
+            'site_title' => 'Category '.$category->getName().' - Title du Site',// voir pour le config + tard
+            'articles' => $articles,
+
+        ]);
     }
 }

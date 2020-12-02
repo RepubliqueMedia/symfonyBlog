@@ -8,8 +8,17 @@
         <img src="{{ article.image }}" alt="{{ article.title }}">
         <p>{{ article.intro }}</p>
         {{ article.content|raw }}
+
+        <div class="categories">
+            {% for category in article.categories %}
+            <a href="{{ path('view_category',{'id':category.id}) }}" class="btn btn-primary btn-sm" >{{ category.name }}</a>
+            {%  endfor %}
+        </div>
     </article>
-    <a href="{{ path('editArticle',{'id':article.id}) }}" class="btn btn-primary" >Editer l'Article</a>
+    <br>
+    <div>
+        <a href="{{ path('edit_article',{'id':article.id}) }}" class="btn btn-primary" >Editer l'Article</a>
+    </div>
 {% endblock %}
 
 

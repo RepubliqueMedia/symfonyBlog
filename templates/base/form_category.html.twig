@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {% if not editMode %}Créer{%  else %}Modifier{% endif %} une Categorie - {{ site_name }}
+
+{% endblock %}
+
+{% block body %}
+
+    <!-- Gen la balise form -->
+    {{ form_start(formCategory) }}
+        <!-- Gen les inputs -->
+        {{ form_widget(formCategory) }}
+    <div class="form-group">
+        {% if not editMode %}
+        <input type="submit" class="btn btn-success" value="Ajouter la Catégorie">
+        {%  else %}
+            <input type="submit" class="btn btn-success" value="Enregistrer la categorie">
+            <a href="{{ path('article',{'id':category.id}) }}" class="btn btn-primary" >Voir la Catégorie</a>
+        {% endif %}
+    </div>
+    <!-- Ferme la balise form (pkoi il faut passer le form en param ??) -->
+    {{ form_end(formCategory) }}
+
+
+{% endblock %}
+
+

@@ -6,7 +6,7 @@
  */
 
 namespace App\Entity;
-use App\Entity\Category;
+
 use App\Repository\ArticleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
