@@ -9,7 +9,9 @@ namespace App\Controller;
 
 
 use App\Entity\Category;
+use App\Entity\Comment;
 use App\Form\CategoryType;
+use App\Form\CommentType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
@@ -66,9 +68,9 @@ class BaseController extends AbstractController
     }
 
     /**
-     * @Route("/article/{id}", name="article", requirements={"id"="\d+"})
+     * @Route("/article/{id}", name="view_article", requirements={"id"="\d+"})
      */
-    public function article(int $id, ArticleRepository $repo): Response
+    public function view_article(int $id, ArticleRepository $repo, Comment $comment = null, Request $request): Response
     {
         //plus nécessaire
         //$repo = $this->getDoctrine()->getRepository(Article::class);
@@ -86,9 +88,33 @@ class BaseController extends AbstractController
             'content'=>'<p>Parag 1 contenu article</p><p>ParaG 2 contenu article</p>'
         ];
         */
+
+        //il faut que j'add le formulaire de comments
+        if (!$comment) {
+            $comment = new Comment();
+        }
+
+        $form = $this->createForm(CommentType::class, $comment);
+
+        // on actualise notre form VS la request : autoload data dans $comments
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            //on affecte le comment a cet article
+            $comment->setArticle($article);
+
+            //on récup le manager d'entity
+            $manager = $this->getDoctrine()->getManager();
+            //on store
+            $manager->persist($comment);
+            $manager->flush();
+
+        }
+
         return $this->render('base/article.html.twig', [
             'site_name' => 'Nom du Site',// voir pour le config + tard
-            'article' => $article
+            'article' => $article,
+            'formComment' => $form->createView(),
         ]);
     }
 
@@ -96,13 +122,13 @@ class BaseController extends AbstractController
      * @Route("/article/new",name="new_article")
      * @Route("/article/{id}/edit",name="edit_article", requirements={"id"="\d+"})
      */
-    function manage_article(Request $request, Article $article=null): Response
+    function manage_article(Request $request, Article $article = null): Response
     {
         /*
          WTF : tu as une route avec un id, cherche moi l'article correspondant auto
         */
 
-        if(!$article){
+        if (!$article) {
             // on init un objet article vide
             $article = new Article();
         }
@@ -127,29 +153,29 @@ class BaseController extends AbstractController
         //dump($article); // c'est ouf mais le handle a load les datas dans $article
         if ($form->isSubmitted() && $form->isValid()) {
             //$article=$form->getData(); // useless, $article déjà = aux datas
-/*
-            Maintenant géré direct dans Entity
-            if(!$article->getId()){
-                //on add la date a notre article vu qu'on a pas le champ
-                $article->setCreatedAt(new \DateTime());
-            }
+            /*
+                        Maintenant géré direct dans Entity
+                        if(!$article->getId()){
+                            //on add la date a notre article vu qu'on a pas le champ
+                            $article->setCreatedAt(new \DateTime());
+                        }
 
-            $article->setUpdatedAt(new \DateTime());
-*/
+                        $article->setUpdatedAt(new \DateTime());
+            */
 
             //on récup le manager d'entity
             $manager = $this->getDoctrine()->getManager();
             $manager->persist($article);
             $manager->flush();
             //dump($article);
-            return $this->redirectToRoute('article', ['id' => $article->getId()]);
+            return $this->redirectToRoute('view_article', ['id' => $article->getId()]);
         }
 
         return $this->render('base/form_article.html.twig', [
             'site_name' => 'Nom du Site',// voir pour le config + tard
             'article' => $article,
             'formArticle' => $form->createView(),
-            'editMode'=>($article->getId() ? true : false),//null = new
+            'editMode' => ($article->getId() ? true : false),//null = new
         ]);
 
     }
@@ -158,9 +184,10 @@ class BaseController extends AbstractController
      * @Route("/category/new",name="new_category")
      * @Route("/category/{id}/edit",name="edit_category", requirements={"id"="\d+"})
      */
-    function manage_category(Request $request, Category $category=null): Response{
-        if(!$category){
-            $category=new Category();
+    function manage_category(Request $request, Category $category = null): Response
+    {
+        if (!$category) {
+            $category = new Category();
         }
         $form = $this->createForm(CategoryType::class, $category);
         $form->handleRequest($request);
@@ -176,25 +203,26 @@ class BaseController extends AbstractController
             'site_name' => 'Nom du Site',// voir pour le config + tard
             'category' => $category,
             'formCategory' => $form->createView(),
-            'editMode'=>($category->getId() ? true : false),//null = new
+            'editMode' => ($category->getId() ? true : false),//null = new
         ]);
     }
 
     /**
      * @Route("/category/{id}", name="view_category", requirements={"id"="\d+"})
      */
-    function view_category(int $id,Category $category): Response {
+    function view_category(int $id, Category $category): Response
+    {
         /*
         $articles = $repo->findBy(['categories'=>$id]);
         dd($articles);
         ArticleRepository $repo
         */
         //tout simplement
-        $articles=$category->getArticles();
+        $articles = $category->getArticles();
 
         return $this->render('base/home.html.twig', [
             'site_name' => 'Nom du Site',// voir pour le config + tard
-            'site_title' => 'Category '.$category->getName().' - Title du Site',// voir pour le config + tard
+            'site_title' => 'Category ' . $category->getName() . ' - Title du Site',// voir pour le config + tard
             'articles' => $articles,
 
         ]);

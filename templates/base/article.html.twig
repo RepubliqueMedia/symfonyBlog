@@ -16,7 +16,35 @@
         </div>
     </article>
     <br>
-    <div>
+
+    <div id="comments">
+        {% for comment in article.comments %}
+            <div class="row">
+                <div class="col-2">
+                    {{ comment.author }}
+                    ({{ comment.email }})
+                </div>
+                <div class="col-8">
+                    {{ comment.content | raw}}
+                </div>
+            </div>
+            <hr>
+        {% endfor %}
+    </div>
+
+    <div id="form_comment">
+        <!-- Gen la balise form -->
+        {{ form_start(formComment) }}
+        <!-- Gen les inputs -->
+        {{ form_widget(formComment) }}
+        <div class="form-group">
+            <input type="submit" class="btn btn-success" value="Envoyer">
+        </div>
+        <!-- Ferme la balise form (pkoi il faut passer le form en param ??) -->
+        {{ form_end(formComment) }}
+    </div>
+
+    <div id="admin_mode">
         <a href="{{ path('edit_article',{'id':article.id}) }}" class="btn btn-primary" >Editer l'Article</a>
     </div>
 {% endblock %}

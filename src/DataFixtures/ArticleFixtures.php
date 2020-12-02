@@ -8,6 +8,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Comment;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Persistence\ObjectManager;
@@ -50,13 +51,20 @@ class ArticleFixtures extends Fixture
                 ->addCategories(new ArrayCollection($cats));
 
             $manager->persist($article);
-            /*
-            on add des comments
-            for ($j = 1; $j <= mt_rand(3, 6); $j++) {
 
+            //on add des comments
+            for ($k = 1; $k <= mt_rand(2, 4); $k++) {
+                $content = '<p>' . implode('</p><p>', $faker->paragraphs(1)) . '</p>';
+                $comment=(new Comment())
+                    ->setAuthor($faker->firstName())
+                    ->setEmail($faker->email)
+                    ->setArticle($article)
+                    ->setContent($content)
+                    ;
+                $manager->persist($comment);
 
             }
-            */
+
         }
 
 

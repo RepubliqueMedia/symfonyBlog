@@ -20,7 +20,7 @@
         <input type="submit" class="btn btn-success" value="Ajouter l'Article">
         {%  else %}
             <input type="submit" class="btn btn-success" value="Enregistrer l'Article">
-            <a href="{{ path('article',{'id':article.id}) }}" class="btn btn-primary" >Voir l'Article</a>
+            <a href="{{ path('view_article',{'id':article.id}) }}" class="btn btn-primary" >Voir l'Article</a>
         {% endif %}
     </div>
     <!-- Ferme la balise form (pkoi il faut passer le form en param ??) -->

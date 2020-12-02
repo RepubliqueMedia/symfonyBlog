@@ -8,7 +8,7 @@
         <h2>{{ article.title }}</h2>
         <img src="{{ article.image }}">
         <p>{{ article.intro }}</p>
-        <a href="{{ path('article',{'id':article.id}) }}" class="btn btn-primary">Lire l'Article</a>
+        <a href="{{ path('view_article',{'id':article.id}) }}" class="btn btn-primary">Lire l'Article</a>
     </article>
     <hr>
 {% endfor %}
