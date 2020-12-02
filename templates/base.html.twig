@@ -41,7 +41,18 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{ path('new_category') }}">New Category</a>
                 </li>
-
+                {% if not app.user %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_login') }}">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_register') }}">Register</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_logout') }}">Logout</a>
+                </li>
+                {%  endif %}
             </ul>
         </div>
     </nav>

@@ -13,7 +13,7 @@ use App\Entity\Comment;
 use App\Form\CategoryType;
 use App\Form\CommentType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+//use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -217,7 +217,8 @@ class BaseController extends AbstractController
         dd($articles);
         ArticleRepository $repo
         */
-        //tout simplement
+        // TODO : recup via article repo + pagination
+        // tout simplement
         $articles = $category->getArticles();
 
         return $this->render('base/home.html.twig', [
