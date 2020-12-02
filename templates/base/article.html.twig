@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ article.title }} - {{ site_name }}{% endblock %}
+
+{% block body %}
+    <article>
+        <h2>{{ article.title }}</h2>
+        <img src="{{ article.image }}" alt="{{ article.title }}">
+        <p>{{ article.intro }}</p>
+        {{ article.content|raw }}
+    </article>
+    <a href="{{ path('editArticle',{'id':article.id}) }}" class="btn btn-primary" >Editer l'Article</a>
+{% endblock %}
+
+

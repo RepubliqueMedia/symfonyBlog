@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {% if not editMode %}Créer{%  else %}Modifier{% endif %} un Article - {{ site_name }}
+
+{% endblock %}
+
+{% block body %}
+
+    <!--
+        form(formArticle) : Gen tout le form
+    -->
+
+    <!-- Gen la balise form -->
+    {{ form_start(formArticle) }}
+        <!-- Gen les inputs -->
+        {{ form_widget(formArticle) }}
+    <div class="form-group">
+        {% if not editMode %}
+        <input type="submit" class="btn btn-success" value="Ajouter l'Article">
+        {%  else %}
+            <input type="submit" class="btn btn-success" value="Enregistrer l'Article">
+            <a href="{{ path('article',{'id':article.id}) }}" class="btn btn-primary" >Voir l'Article</a>
+        {% endif %}
+    </div>
+    <!-- Ferme la balise form (pkoi il faut passer le form en param ??) -->
+    {{ form_end(formArticle) }}
+
+
+{% endblock %}
+
+

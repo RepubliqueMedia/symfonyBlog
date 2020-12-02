@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ site_title }} - {{ site_name }}{% endblock %}
+
+{% block body %}
+{% for article in articles %}
+    <article>
+        <h2>{{ article.title }}</h2>
+        <img src="{{ article.image }}">
+        <p>{{ article.intro }}</p>
+        <a href="{{ path('article',{'id':article.id}) }}" class="btn btn-primary">Lire l'Article</a>
+    </article>
+    <hr>
+{% endfor %}
+
+
+{% endblock %}
