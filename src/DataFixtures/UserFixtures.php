@@ -24,10 +24,13 @@ class UserFixtures extends Fixture
             $user = new User();
             $user
                 ->setEmail($faker->email)
+
                 ->setPassword($this->passwordEncoder->encodePassword(
                     $user,
                     '12345678'
                 ));
+
+                //->setPassword('12345678');
             $manager->persist($user);
 
         }

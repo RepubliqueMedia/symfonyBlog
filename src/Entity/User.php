@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -15,6 +17,12 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class User implements UserInterface
 {
+/*
+    private $passwordEncoder;
+    public function __construct(ContainerInterface $container){
+        $this->passwordEncoder=$container;
+    }
+*/
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -97,8 +105,27 @@ class User implements UserInterface
         return (string) $this->password;
     }
 
+    /**
+     * @var UserPasswordEncoderInterface
+     */
+    private $passwordEncoder;
+
+    public function setPasswordEncoder( $passwordEncoder)
+    {
+        $this->passwordEncoder = $passwordEncoder;
+    }
+
     public function setPassword(string $password): self
     {
+        //dd($this->passwordEncoder);
+        //$this->setPasswordEncoder;
+        //$passwordEncoder=new UserPasswordEncoder($this);
+/*
+        $this->password = $this->passwordEncoder->encodePassword(
+            $this,
+            $password
+        );
+*/
         $this->password = $password;
 
         return $this;
@@ -120,8 +147,9 @@ class User implements UserInterface
      * @ORM\PrePersist
      * @ORM\PreUpdate
      */
-    public function preUpdate():void{
+    public function preUpdate($args):void{
         //marche pas
+        //dd($args);
         //$passwordEncoder=new UserPasswordEncoderInterface();
         //$this->password=$passwordEncoder->encodePassword($this,$this->password);
         //$this->setUpdatedAt(new \DateTime());

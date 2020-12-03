@@ -10,7 +10,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoder;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class LoginController extends AbstractController
 {
@@ -18,7 +20,7 @@ class LoginController extends AbstractController
 
     public function __construct(EntityManagerInterface $manager)
     {
-        $this->manager=$manager;
+        $this->manager = $manager;
     }
 
     /**
@@ -38,7 +40,7 @@ class LoginController extends AbstractController
         return $this->render('security/login.html.twig', [
             'last_username' => $lastUsername,
             'error' => $error,
-            'formLogin'=>$form->createView()
+            'formLogin' => $form->createView()
         ]);
     }
 
@@ -53,14 +55,20 @@ class LoginController extends AbstractController
     /**
      * @Route("/register", name="app_register")
      */
-    public function register(Request $request){
+    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    {
 
-        $user=new User();
-        $form = $this->createForm(RegisterType::class,$user);
+        $user = new User();
+        $form = $this->createForm(RegisterType::class, $user);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            //on chiffre le pass
+            $user->setPassword($passwordEncoder->encodePassword(
+                $user,
+                $user->getPassword()
+            ));
             //on récup le manager d'entity
             $this->manager->persist($user);
             $this->manager->flush();

@@ -42,8 +42,10 @@ class ArticleFixtures extends Fixture
             $date = $faker->dateTimeBetween('- 30 days');
             shuffle($categories);
             $cats=array_slice($categories,0,mt_rand(1,3));
+            $article->title=($faker->sentence());
             $article
-                ->setTitle($faker->sentence())
+                //->setTitle($faker->sentence())
+
                 ->setContent($content)
                 ->setImage($faker->imageUrl())
                 ->setIntro($faker->paragraph(1))

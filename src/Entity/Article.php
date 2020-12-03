@@ -14,11 +14,13 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 
+//Apparemment auto load
+//use App\Entity\AbstractEntity as AbstractEntity;
 /**
  * @ORM\Entity(repositoryClass=ArticleRepository::class)
  * @ORM\HasLifecycleCallbacks()
  */
-class Article
+class Article extends AbstractEntity
 {
     /**
      * @ORM\Id
@@ -29,8 +31,9 @@ class Article
 
     /**
      * @ORM\Column(type="string", length=255)
+     * #Auto\Set
      */
-    private $title;
+    protected $title;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -49,13 +52,16 @@ class Article
 
     /**
      * @ORM\Column(type="datetime")
+     * #Auto\Set
      */
     private $createdAt;
-
+    //protected $createdAt;
     /**
      * @ORM\Column(type="datetime",nullable=true)
+
      */
     private $updatedAt;
+
 
     /**
      * @ORM\ManyToMany(targetEntity=Category::class, inversedBy="articles")
@@ -84,14 +90,14 @@ class Article
     {
         return $this->title;
     }
-
+/*
     public function setTitle(string $title): self
     {
         $this->title = $title;
 
         return $this;
     }
-
+*/
     public function getImage(): ?string
     {
         return $this->image;
@@ -128,29 +134,29 @@ class Article
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
-    {
-        return $this->createdAt;
-    }
+        public function getCreatedAt(): ?\DateTimeInterface
+        {
+            return $this->createdAt;
+        }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
-    {
-        $this->createdAt = $createdAt;
+        public function setCreatedAt(\DateTimeInterface $createdAt): self
+        {
+            $this->createdAt = $createdAt;
 
-        return $this;
-    }
+            return $this;
+        }
 
-    public function getUpdatedAt(): ?\DateTimeInterface
-    {
-        return $this->updatedAt;
-    }
+        public function getUpdatedAt(): ?\DateTimeInterface
+        {
+            return $this->updatedAt;
+        }
 
-    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
-    {
-        $this->updatedAt = $updatedAt;
+        public function setUpdatedAt(\DateTimeInterface $updatedAt): self
+        {
+            $this->updatedAt = $updatedAt;
 
-        return $this;
-    }
+            return $this;
+        }
 
     /*
  * Validation des datas de l'entity
