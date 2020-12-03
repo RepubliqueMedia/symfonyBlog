@@ -20,65 +20,58 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
  * @ORM\Entity(repositoryClass=ArticleRepository::class)
  * @ORM\HasLifecycleCallbacks()
  */
-class Article extends AbstractEntity2
+class Article extends AbstractEntity
 {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * #Auto\Get
      */
-    //protected $id;
-    public $id;
+    private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * #Auto\Public
+     * #Auto\Set
      */
     protected $title;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * #Auto\Public
      */
-    protected $image;
+    private $image;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * #Auto\Public
      */
-    protected $intro;
+    private $intro;
 
     /**
      * @ORM\Column(type="text")
-     * #Auto\Public
      */
-    protected $content;
+    private $content;
 
     /**
      * @ORM\Column(type="datetime")
-     * #Auto\Public
+     * #Auto\Set
      */
-    protected $createdAt;
-
+    private $createdAt;
+    //protected $createdAt;
     /**
      * @ORM\Column(type="datetime",nullable=true)
-     * #Auto\Public
+
      */
-    protected $updatedAt;
+    private $updatedAt;
 
 
     /**
      * @ORM\ManyToMany(targetEntity=Category::class, inversedBy="articles")
-     * #Auto\Get
      */
-    protected $categories;
+    private $categories;
 
     /**
      * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="article", orphanRemoval=true)
-     * #Auto\Get
      */
-    protected $comments;
+    private $comments;
 
 
     public function __construct()
@@ -86,6 +79,84 @@ class Article extends AbstractEntity2
         $this->categories = new ArrayCollection();
         $this->comments = new ArrayCollection();
     }
+
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+/*
+    public function setTitle(string $title): self
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+*/
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(string $image): self
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    public function getIntro(): ?string
+    {
+        return $this->intro;
+    }
+
+    public function setIntro(string $intro): self
+    {
+        $this->intro = $intro;
+
+        return $this;
+    }
+
+    public function getContent(): ?string
+    {
+        return $this->content;
+    }
+
+    public function setContent(string $content): self
+    {
+        $this->content = $content;
+
+        return $this;
+    }
+
+        public function getCreatedAt(): ?\DateTimeInterface
+        {
+            return $this->createdAt;
+        }
+
+        public function setCreatedAt(\DateTimeInterface $createdAt): self
+        {
+            $this->createdAt = $createdAt;
+
+            return $this;
+        }
+
+        public function getUpdatedAt(): ?\DateTimeInterface
+        {
+            return $this->updatedAt;
+        }
+
+        public function setUpdatedAt(\DateTimeInterface $updatedAt): self
+        {
+            $this->updatedAt = $updatedAt;
+
+            return $this;
+        }
 
     /*
  * Validation des datas de l'entity
@@ -175,6 +246,14 @@ Marche pas sur le type
 
     }
 
+    /**
+     * @return Collection|Category[]
+     */
+    public function getCategories(): Collection
+    {
+        return $this->categories;
+    }
+
     public function addCategory(Category $category): self
     {
         if (!$this->categories->contains($category)) {
@@ -205,6 +284,14 @@ Marche pas sur le type
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection|Comment[]
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
     }
 
     public function addComment(Comment $comment): self

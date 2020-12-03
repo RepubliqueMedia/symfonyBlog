@@ -79,8 +79,8 @@ class BaseController extends AbstractController
         //$article=$repo->findOneBy(['id'=>$id]);
         // Crazy auto generated
         $article = $repo->findOneById($id);
-        //dump($article);
-        dd($article->createdAt='2020-10-01');
+        dump($article);
+        //dd($article->createdAt='2020-10-01');
         /*
         $article=[
             'id'=>1,
